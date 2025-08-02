@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link rel="manifest" href="manifest.json">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Exclusiva de Disney Springs</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .zone-selector {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .zone-btn {
+            background: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            color: #333;
+        }
+
+        .zone-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        .zone-btn.active {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+        }
+
+        .category-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            background: rgba(255,255,255,0.9);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: #333;
+        }
+
+        .category-btn:hover {
+            background: white;
+            transform: translateY(-1px);
+        }
+
+        .category-btn.active {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .zone-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .zone-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .category-section {
+            display: none;
+            margin-bottom: 2rem;
+        }
+
+        .category-section.active {
+            display: block;
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .item-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-left: 4px solid #ff6b6b;
+        }
+
+        .item-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+        }
+
+        .item-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .item-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .item-type {
+            display: inline-block;
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .zone-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .zone-title {
+            font-size: 2.5rem;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 0.5rem;
+        }
+
+        .zone-description {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.9);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .restaurant-type {
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+        }
+
+        .shop-type {
+            background: linear-gradient(135deg, #fdcb6e, #e17055);
+        }
+
+        .activity-type {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .zone-btn, .category-btn {
+                padding: 0.8rem 1.2rem;
+                font-size: 0.9rem;
+            }
+            
+            .items-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏰 Guía Exclusiva de Disney Springs</h1>
+        <p>Descubre todos los restaurantes, tiendas y actividades por zonas</p>
+    </div>
+
+    <div class="container">
+        <div class="zone-selector">
+            <button class="zone-btn active" onclick="showZone('marketplace')">🛍️ The Marketplace</button>
+            <button class="zone-btn" onclick="showZone('landing')">🚢 The Landing</button>
+            <button class="zone-btn" onclick="showZone('town-center')">🏛️ Town Center</button>
+            <button class="zone-btn" onclick="showZone('west-side')">🎭 West Side</button>
+        </div>
+
+        <!-- The Marketplace -->
+        <div id="marketplace" class="zone-content active">
+            <div class="zone-header">
+                <h2 class="zone-title">🛍️ The Marketplace</h2>
+                <p class="zone-description">La zona más familiar de Disney Springs, con tiendas temáticas de Disney y restaurantes casuales perfectos para toda la familia.</p>
+            </div>
+
+            <div class="category-tabs">
+                <button class="category-btn active" onclick="showCategory('marketplace', 'restaurants')">🍽️ Restaurantes</button>
+                <button class="category-btn" onclick="showCategory('marketplace', 'shops')">🛍️ Tiendas</button>
+                <button class="category-btn" onclick="showCategory('marketplace', 'activities')">🎯 Actividades</button>
+            </div>
+
+            <div id="marketplace-restaurants" class="category-section active">
+                <div class="items-grid">
+                    <div class="item-card">
+                        <div class="item-name">T-REX Cafe</div>
+                        <div class="item-description">Restaurante temático prehistórico con animatrónicos de dinosaurios, volcanes que erupcionan y una experiencia inmersiva única. Perfecto para familias con niños.</div>
+                        <span class="item-type restaurant-type">Temático Familiar</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Rainforest Cafe</div>
+                        <div class="item-description">Aventura culinaria en la selva tropical con animales animatrónicos, tormentas tropicales simuladas y un ambiente selvático mágico.</div>
+                        <span class="item-type restaurant-type">Temático Familiar</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Ghirardelli Ice Cream & Chocolate Shop</div>
+                        <div class="item-description">Deliciosos helados artesanales y chocolates premium de la famosa marca californiana. Perfecto para un dulce capricho.</div>
+                        <span class="item-type restaurant-type">Heladería</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Earl of Sandwich</div>
+                        <div class="item-description">Sándwiches gourmet frescos y ensaladas en un ambiente casual. Ideal para una comida rápida pero de calidad.</div>
+                        <span class="item-type restaurant-type">Casual</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Wolfgang Puck Express</div>
+                        <div class="item-description">Cocina californiana casual del famoso chef Wolfgang Puck con pizzas gourmet, ensaladas frescas y platos asiáticos fusión.</div>
+                        <span class="item-type restaurant-type">Californiano</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Marketplace Snacks</div>
+                        <div class="item-description">Kiosco de snacks con pretzel, turkey legs, bebidas refrescantes y dulces. Perfecto para picar entre compras.</div>
+                        <span class="item-type restaurant-type">Snacks</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Starbucks</div>
+                        <div class="item-description">Café premium con bebidas especiales, pasteles, sándwiches y el ambiente familiar de Starbucks en Disney Springs.</div>
+                        <span class="item-type restaurant-type">Café</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="marketplace-shops" class="category-section">
+                <div class="items-grid">
+                    <div class="item-card">
+                        <div class="item-name">World of Disney</div>
+                        <div class="item-description">La tienda de Disney más grande del mundo con merchandise exclusivo, ropa, juguetes y recuerdos de todos los personajes y películas de Disney.</div>
+                        <span class="item-type shop-type">Tienda Principal</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Disney's Days of Christmas</div>
+                        <div class="item-description">Decoraciones navideñas de Disney durante todo el año, ornamentos exclusivos y artículos festivos con temática Disney.</div>
+                        <span class="item-type shop-type">Temática Navideña</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Goofy's Candy Co.</div>
+                        <div class="item-description">Dulces artesanales, chocolates personalizados y golosinas temáticas de Disney. Perfecto para los amantes de los dulces.</div>
+                        <span class="item-type shop-type">Dulcería</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Disney's Pin Traders</div>
+                        <div class="item-description">La colección más grande de pins de Disney, incluyendo ediciones limitadas y pins exclusivos de los parques.</div>
+                        <span class="item-type shop-type">Coleccionables</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="marketplace-activities" class="category-section">
+                <div class="items-grid">
+                    <div class="item-card">
+                        <div class="item-name">LEGO Imagination Center</div>
+                        <div class="item-description">Área interactiva con construcciones LEGO gigantes, zona de juegos y la oportunidad de construir tus propias creaciones.</div>
+                        <span class="item-type activity-type">Interactiva</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Marketplace Carousel</div>
+                        <div class="item-description">Carrusel clásico con caballos pintados a mano y música nostálgica. Una experiencia mágica para toda la familia.</div>
+                        <span class="item-type activity-type">Atracción</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- The Landing -->
+        <div id="landing" class="zone-content">
+            <div class="zone-header">
+                <h2 class="zone-title">🚢 The Landing</h2>
+                <p class="zone-description">Zona elegante con arquitectura de pueblo costero, restaurantes de alta calidad y tiendas boutique con vistas al lago.</p>
+            </div>
+
+            <div class="category-tabs">
+                <button class="category-btn active" onclick="showCategory('landing', 'restaurants')">🍽️ Restaurantes</button>
+                <button class="category-btn" onclick="showCategory('landing', 'shops')">🛍️ Tiendas</button>
+                <button class="category-btn" onclick="showCategory('landing', 'activities')">🎯 Actividades</button>
+            </div>
+
+            <div id="landing-restaurants" class="category-section active">
+                <div class="items-grid">
+                    <div class="item-card">
+                        <div class="item-name">The Boathouse</div>
+                        <div class="item-description">Restaurante de mariscos de lujo con vistas al lago, colección de barcos vintage y experiencias en anficares. Ambiente náutico elegante.</div>
+                        <span class="item-type restaurant-type">Mariscos Premium</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Paddlefish</div>
+                        <div class="item-description">Mariscos frescos y sushi en un barco de vapor renovado con vistas panorámicas. Experiencia culinaria única sobre el agua.</div>
+                        <span class="item-type restaurant-type">Sushi & Mariscos</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Raglan Road Irish Pub</div>
+                        <div class="item-description">Auténtico pub irlandés con música en vivo, danza irlandesa y cocina tradicional. Ambiente festivo y acogedor.</div>
+                        <span class="item-type restaurant-type">Pub Irlandés</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Paradiso 37</div>
+                        <div class="item-description">Sabores de las Américas con tequila bar, música en vivo y terraza con vista al lago. Ambiente tropical y festivo.</div>
+                        <span class="item-type restaurant-type">Latinoamericano</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Portobello Country Italian Trattoria</div>
+                        <div class="item-description">Auténtica cocina italiana en un ambiente rústico y acogedor con pasta fresca, pizzas al horno de leña y vinos italianos.</div>
+                        <span class="item-type restaurant-type">Italiano Tradicional</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Fulton's Crab House</div>
+                        <div class="item-description">Mariscos frescos y cangrejo en un barco de vapor histórico con vistas al lago. Especialidad en cangrejo de Alaska y langosta.</div>
+                        <span class="item-type restaurant-type">Mariscos Especialidad</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Cookes of Dublin</div>
+                        <div class="item-description">Fish & chips auténtico irlandés con cerveza artesanal y ambiente de pub tradicional. Pescado fresco empanizado a mano.</div>
+                        <span class="item-type restaurant-type">Fish & Chips</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Jock Lindsey's Hangar Bar</div>
+                        <div class="item-description">Bar temático de Indiana Jones con cócteles creativos, pequeños platos y decoración de aventuras arqueológicas.</div>
+                        <span class="item-type restaurant-type">Bar Temático</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="landing-shops" class="category-section">
+                <div class="items-grid">
+                    <div class="item-card">
+                        <div class="item-name">The Art of Disney</div>
+                        <div class="item-description">Galería con arte original de Disney, litografías limitadas, esculturas y piezas de colección exclusivas de los artistas de Disney.</div>
+                        <span class="item-type shop-type">Arte & Coleccionables</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Chapel Hats</div>
+                        <div class="item-description">Sombreros artesanales de alta calidad, desde gorras casuales hasta sombreros elegantes, muchos con temática Disney.</div>
+                        <span class="item-type shop-type">Accesorios</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="landing-activities" class="category-section">
+                <div class="items-grid">
+                    <div class="item-card">
+                        <div class="item-name">Amphicar Tours</div>
+                        <div class="item-description">Tours únicos en vehículos anfibios vintage que van por tierra y agua. Una experiencia inolvidable explorando Disney Springs desde una perspectiva diferente.</div>
+                        <span class="item-type activity-type">Tour Acuático</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Characters in Flight</div>
+                        <div class="item-description">Globo aerostático que se eleva 400 pies ofreciendo vistas panorámicas de Disney Springs y los alrededores.</div>
+                        <span class="item-type activity-type">Atracción Aérea</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Town Center -->
+        <div id="town-center" class="zone-content">
+            <div class="zone-header">
+                <h2 class="zone-title">🏛️ Town Center</h2>
+                <p class="zone-description">Distrito de compras al aire libre con marcas de lujo, restaurantes sofisticados y arquitectura elegante estilo pueblo español.</p>
+            </div>
+
+            <div class="category-tabs">
+                <button class="category-btn active" onclick="showCategory('town-center', 'restaurants')">🍽️ Restaurantes</button>
+                <button class="category-btn" onclick="showCategory('town-center', 'shops')">🛍️ Tiendas</button>
+                <button class="category-btn" onclick="showCategory('town-center', 'activities')">🎯 Actividades</button>
+            </div>
+
+            <div id="town-center-restaurants" class="category-section active">
+                <div class="items-grid">
+                    <div class="item-card">
+                        <div class="item-name">The Edison</div>
+                        <div class="item-description">Restaurante y lounge temático de la era industrial con espectáculos en vivo, cócteles artesanales y ambiente steampunk único.</div>
+                        <span class="item-type restaurant-type">Temático Premium</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Maria & Enzo's Ristorante</div>
+                        <div class="item-description">Cocina italiana auténtica en un elegante terminal aéreo de los años 30. Ambiente romántico y sofisticado.</div>
+                        <span class="item-type restaurant-type">Italiano Elegante</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Wine Bar George</div>
+                        <div class="item-description">Bar de vinos con la colección más grande de Disney, maridajes gourmet y ambiente sofisticado para conocedores del vino.</div>
+                        <span class="item-type restaurant-type">Wine Bar</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Blaze Pizza</div>
+                        <div class="item-description">Pizzas artesanales hechas al momento con ingredientes frescos y masa fermentada. Rápido, fresco y personalizable.</div>
+                        <span class="item-type restaurant-type">Pizza Artesanal</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Frontera Cocina</div>
+                        <div class="item-description">Cocina mexicana moderna del chef Rick Bayless con tacos gourmet, guacamole fresco y cócteles con mezcal premium.</div>
+                        <span class="item-type restaurant-type">Mexicano Gourmet</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Morimoto Asia</div>
+                        <div class="item-description">Cocina pan-asiática del chef Masaharu Morimoto con sushi premium, dim sum y platos fusión en un ambiente elegante.</div>
+                        <span class="item-type restaurant-type">Asiático Premium</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">The Polite Pig</div>
+                        <div class="item-description">Barbacoa artesanal con carnes ahumadas, cervezas artesanales y ambiente casual. Especialidad en cerdo y brisket.</div>
+                        <span class="item-type restaurant-type">Barbacoa</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Homecoming</div>
+                        <div class="item-description">Cocina sureña moderna de la chef Art Smith con pollo frito, mac & cheese gourmet y postres caseros tradicionales.</div>
+                        <span class="item-type restaurant-type">Sureño Moderno</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Chicken Guy!</div>
+                        <div class="item-description">Pollo frito gourmet del chef Guy Fieri con salsas únicas, tenders crujientes y acompañamientos creativos.</div>
+                        <span class="item-type restaurant-type">Pollo Frito</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Amorette's Patisserie</div>
+                        <div class="item-description">Pastelería francesa artesanal con pasteles elaborados, macarons, chocolates y postres inspirados en Disney.</div>
+                        <span class="item-type restaurant-type">Pastelería</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Sprinkles</div>
+                        <div class="item-description">Cupcakes gourmet con sabores únicos, frosting cremoso y decoraciones artísticas. También tienen máquina expendedora 24/7.</div>
+                        <span class="item-type restaurant-type">Cupcakes</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Vivoli il Gelato</div>
+                        <div class="item-description">Gelato artesanal italiano auténtico con sabores tradicionales y creativos, sorbetos y granitas refrescantes.</div>
+                        <span class="item-type restaurant-type">Gelato</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">D-Luxe Burger</div>
+                        <div class="item-description">Hamburguesas gourmet con carne premium, ingredientes frescos y papas fritas artesanales. Ambiente casual elegante.</div>
+                        <span class="item-type restaurant-type">Hamburguesas Gourmet</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="town-center-shops" class="category-section">
+                <div class="items-grid">
+                    <div class="item-card">
+                        <div class="item-name">Zara</div>
+                        <div class="item-description">Moda contemporánea española con las últimas tendencias en ropa para hombre, mujer y niños.</div>
+                        <span class="item-type shop-type">Moda</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">UNIQLO</div>
+                        <div class="item-description">Ropa casual japonesa de alta calidad con colaboraciones exclusivas de Disney y tecnología innovadora en textiles.</div>
+                        <span class="item-type shop-type">Moda Casual</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Pandora</div>
+                        <div class="item-description">Joyería personalizable con charms exclusivos de Disney, pulseras, collares y anillos de alta calidad.</div>
+                        <span class="item-type shop-type">Joyería</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Sunglass Hut</div>
+                        <div class="item-description">Gafas de sol de marcas premium como Ray-Ban, Oakley y Prada, con estilos exclusivos y ediciones limitadas.</div>
+                        <span class="item-type shop-type">Accesorios</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="town-center-activities" class="category-section">
+                <div class="items-grid">
+                    <div class="item-card">
+                        <div class="item-name">Coca-Cola Store Rooftop</div>
+                        <div class="item-description">Terraza en la azotea con vistas panorámicas de Disney Springs, degustaciones de Coca-Cola de todo el mundo y experiencias interactivas.</div>
+                        <span class="item-type activity-type">Experiencia Interactiva</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- West Side -->
+        <div id="west-side" class="zone-content">
+            <div class="zone-header">
+                <h2 class="zone-title">🎭 West Side</h2>
+                <p class="zone-description">Zona de entretenimiento con teatros, bowling, cine y restaurantes únicos. El corazón del entretenimiento nocturno de Disney Springs.</p>
+            </div>
+
+            <div class="category-tabs">
+                <button class="category-btn active" onclick="showCategory('west-side', 'restaurants')">🍽️ Restaurantes</button>
+                <button class="category-btn" onclick="showCategory('west-side', 'shops')">🛍️ Tiendas</button>
+                <button class="category-btn" onclick="showCategory('west-side', 'activities')">🎯 Actividades</button>
+            </div>
+
+            <div id="west-side-restaurants" class="category-section active">
+                <div class="items-grid">
+                    <div class="item-card">
+                        <div class="item-name">House of Blues</div>
+                        <div class="item-description">Restaurante y venue de música en vivo con cocina sureña auténtica, gospel brunch dominical y conciertos de artistas reconocidos.</div>
+                        <span class="item-type restaurant-type">Sureño & Música</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Planet Hollywood</div>
+                        <div class="item-description">Restaurante temático de Hollywood con memorabilia de películas, hamburguesas gourmet y ambiente cinematográfico.</div>
+                        <span class="item-type restaurant-type">Temático Hollywood</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Bongos Cuban Cafe</div>
+                        <div class="item-description">Cocina cubana auténtica con música latina en vivo, mojitos tradicionales y ambiente tropical festivo.</div>
+                        <span class="item-type restaurant-type">Cubano</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Splitsville Luxury Lanes</div>
+                        <div class="item-description">Bowling de lujo con cocina americana gourmet, sushi bar y ambiente retro-chic. Perfecto para grupos y familias.</div>
+                        <span class="item-type restaurant-type">Bowling & Comida</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Wolfgang Puck Bar & Grill</div>
+                        <div class="item-description">Cocina californiana moderna del chef Wolfgang Puck con steaks premium, mariscos frescos y cócteles artesanales.</div>
+                        <span class="item-type restaurant-type">Californiano Premium</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Jaleo by José Andrés</div>
+                        <div class="item-description">Tapas españolas auténticas del chef José Andrés con jamón ibérico, paellas tradicionales y sangría artesanal.</div>
+                        <span class="item-type restaurant-type">Español Tapas</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">City Works Eatery & Pour House</div>
+                        <div class="item-description">Sports bar con más de 90 cervezas artesanales, comida americana casual y múltiples pantallas para deportes.</div>
+                        <span class="item-type restaurant-type">Sports Bar</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Deluxe Burger</div>
+                        <div class="item-description">Hamburguesas artesanales con carne Angus, ingredientes premium y papas fritas cortadas a mano. Ambiente casual moderno.</div>
+                        <span class="item-type restaurant-type">Hamburguesas</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Food Trucks</div>
+                        <div class="item-description">Variedad rotativa de food trucks con cocina internacional, desde tacos mexicanos hasta BBQ sureño y postres únicos.</div>
+                        <span class="item-type restaurant-type">Food Trucks</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="west-side-shops" class="category-section">
+                <div class="items-grid">
+                    <div class="item-card">
+                        <div class="item-name">Disney PhotoPass Studio</div>
+                        <div class="item-description">Estudio profesional de fotografía con fondos mágicos de Disney, efectos especiales y recuerdos fotográficos únicos.</div>
+                        <span class="item-type shop-type">Fotografía</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Fit2Run</div>
+                        <div class="item-description">Tienda especializada en running con productos de alta calidad, análisis de pisada y gear para corredores de todos los niveles.</div>
+                        <span class="item-type shop-type">Deportes</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Something Silver</div>
+                        <div class="item-description">Joyería artesanal en plata con diseños únicos, piezas personalizables y accesorios elegantes.</div>
+                        <span class="item-type shop-type">Joyería Artesanal</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="west-side-activities" class="category-section">
+                <div class="items-grid">
+                    <div class="item-card">
+                        <div class="item-name">Cirque du Soleil</div>
+                        <div class="item-description">Espectáculo teatral único "Drawn to Life" que combina la magia de Disney con la artística acrobacia del Cirque du Soleil.</div>
+                        <span class="item-type activity-type">Teatro</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">AMC Disney Springs 24</div>
+                        <div class="item-description">Complejo de cines con 24 salas, tecnología IMAX, Dolby Cinema y los últimos estrenos de Hollywood.</div>
+                        <span class="item-type activity-type">Cine</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">NBA Experience</div>
+                        <div class="item-description">Experiencia interactiva de baloncesto con simuladores, juegos de habilidad y memorabilia de la NBA.</div>
+                        <span class="item-type activity-type">Deportes Interactivos</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Splitsville Luxury Lanes</div>
+                        <div class="item-description">30 pistas de bowling de lujo con tecnología moderna, música, luces LED y ambiente de fiesta.</div>
+                        <span class="item-type activity-type">Bowling</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showZone(zoneName) {
+            // Hide all zones
+            const zones = document.querySelectorAll('.zone-content');
+            zones.forEach(zone => zone.classList.remove('active'));
+            
+            // Show selected zone
+            document.getElementById(zoneName).classList.add('active');
+            
+            // Update zone buttons
+            const zoneButtons = document.querySelectorAll('.zone-btn');
+            zoneButtons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Show restaurants by default and reset category buttons
+            showCategory(zoneName, 'restaurants');
+            const categoryButtons = document.querySelectorAll(`#${zoneName} .category-btn`);
+            categoryButtons.forEach(btn => btn.classList.remove('active'));
+            categoryButtons[0].classList.add('active');
+        }
+
+        function showCategory(zone, category) {
+            // Hide all categories in the zone
+            const categories = document.querySelectorAll(`#${zone} .category-section`);
+            categories.forEach(cat => cat.classList.remove('active'));
+            
+            // Show selected category
+            document.getElementById(`${zone}-${category}`).classList.add('active');
+            
+            // Update category buttons for this zone
+            const categoryButtons = document.querySelectorAll(`#${zone} .category-btn`);
+            categoryButtons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Initialize with first zone and restaurants
+        document.addEventListener('DOMContentLoaded', function() {
+            showZone('marketplace');
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9691048ff596c0ff',t:'MTc1NDE3MzgwNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js');
+}
+</script>
+</body>
+</html>
